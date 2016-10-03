@@ -3,6 +3,11 @@
 set -e
 set -x
 
+# make sure travis cache directories exist to avoid crash of "casher"
+mkdir -p $HOME/.cache/pip
+mkdir -p $HOME/.pyenv
+sudo mkdir -p /usr/local/Cellar/
+
 chown -R $USER $HOME/.cache/pip || true
 
 if [[ "$(uname -s)" == 'Darwin' ]]; then
