@@ -40,6 +40,9 @@ else
     sudo apt-get install -y libfuse-dev fuse pkg-config  # optional, for FUSE support
 fi
 
+# Always keep pip/setuptools/wheel up to date so that wheels can be successfully built.
+pip install -U pip setuptools wheel
+
 python -m virtualenv ~/.venv
 source ~/.venv/bin/activate
 pip install -r requirements.d/development.txt
