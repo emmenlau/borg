@@ -32,7 +32,7 @@ if [[ "$(uname -s)" == 'Darwin' ]]; then
     brew link xz
     brew link pyenv
     brew link pkg-config
-    brew link Caskroom/versions/osxfuse-beta
+    brew link osxfuse-beta
 
     case "${TOXENV}" in
         py34)
