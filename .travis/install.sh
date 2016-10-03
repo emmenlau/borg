@@ -3,6 +3,8 @@
 set -e
 set -x
 
+chown -R $USER $HOME/.cache/pip || true
+
 if [[ "$(uname -s)" == 'Darwin' ]]; then
     brew update || brew update
 
