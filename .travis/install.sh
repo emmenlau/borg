@@ -32,7 +32,6 @@ if [[ "$(uname -s)" == 'Darwin' ]]; then
     brew link xz
     brew link pyenv
     brew link pkg-config
-    brew link FUSE
 
     case "${TOXENV}" in
         py34)
