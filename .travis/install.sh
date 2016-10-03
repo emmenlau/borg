@@ -22,6 +22,13 @@ if [[ "$(uname -s)" == 'Darwin' ]]; then
     brew install pkg-config
     brew install Caskroom/versions/osxfuse-beta
 
+    # kegs from the travis cache need to be relinked
+    brew link lz4
+    brew link xz
+    brew link pyenv
+    brew link pkg-config
+    brew link Caskroom/versions/osxfuse-beta
+
     case "${TOXENV}" in
         py34)
             pyenv install --skip-existing 3.4.3
@@ -33,17 +40,18 @@ if [[ "$(uname -s)" == 'Darwin' ]]; then
             ;;
     esac
     pyenv rehash
+    # Always keep pip/setuptools/wheel up to date so that wheels can be successfully built.
+    python -m pip install -U pip setuptools wheel
     python -m pip install --user 'virtualenv<14.0'
 else
+    # Always keep pip/setuptools/wheel up to date so that wheels can be successfully built.
+    pip install -U pip setuptools wheel
     pip install 'virtualenv<14.0'
     sudo apt-get update
     sudo apt-get install -y liblz4-dev
     sudo apt-get install -y libacl1-dev
     sudo apt-get install -y libfuse-dev fuse pkg-config  # optional, for FUSE support
 fi
-
-# Always keep pip/setuptools/wheel up to date so that wheels can be successfully built.
-pip install -U pip setuptools wheel
 
 python -m virtualenv ~/.venv
 source ~/.venv/bin/activate
