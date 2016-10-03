@@ -22,11 +22,11 @@ if [[ "$(uname -s)" == 'Darwin' ]]; then
 
     case "${TOXENV}" in
         py34)
-            pyenv install 3.4.3
+            pyenv install --skip-existing 3.4.3
             pyenv global 3.4.3
             ;;
         py35)
-            pyenv install 3.5.1
+            pyenv install --skip-existing 3.5.1
             pyenv global 3.5.1
             ;;
     esac
