@@ -5,6 +5,8 @@ language: python
 cache:
     directories:
         - $HOME/.cache/pip
+        - $HOME/.pyenv
+        - /usr/local/Cellar/
 
 # note: use py 3.5.2, it has lzma support. 3.5(.0) on travis.org/trusty does not.
 matrix:
