@@ -200,6 +200,15 @@ def prune_split(archives, pattern, n, skip=[]):
     return keep
 
 
+def prune_keep(archives, keep_list, skip=[]):
+    keep = []
+    for a in archives:
+        if a.name in keep_list:
+            if a not in skip:
+                keep.append(a)
+    return keep
+
+
 class Statistics:
 
     def __init__(self):
