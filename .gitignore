@@ -24,3 +24,5 @@ borg.exe
 .coverage
 .vagrant
 .eggs
+*.swp
+borg-*.spec
