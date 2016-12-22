@@ -19,7 +19,7 @@ import collections
 from . import __version__
 from .helpers import Error, location_validator, archivename_validator, format_line, format_time, format_file_size, \
     parse_pattern, PathPrefixPattern, to_localtime, timestamp, safe_timestamp, bin_to_hex, \
-    get_cache_dir, prune_within, prune_split, prune_keep, \
+    get_cache_dir, prune_within, prune_split, prune_keep, prune_remove, \
     Manifest, NoManifestError, remove_surrogates, update_excludes, format_archive, check_extension_modules, Statistics, \
     dir_is_tagged, bigint_to_int, ChunkerParams, CompressionSpec, PrefixSpec, is_slow_msgpack, yes, sysinfo, \
     EXIT_SUCCESS, EXIT_WARNING, EXIT_ERROR, log_multi, PatternMatcher, ErrorIgnoringTextIOWrapper
@@ -671,11 +671,12 @@ class Archiver:
     def do_prune(self, args, repository, manifest, key):
         """Prune repository archives according to specified rules"""
         if not any((args.hourly, args.daily,
-                    args.weekly, args.monthly, args.yearly, args.keep_list, args.within)):
+                    args.weekly, args.monthly, args.yearly, args.within,
+                    args.keep_list, args.remove_list)):
             self.print_error('At least one of the "keep-within", "keep-last", '
                              '"keep-hourly", "keep-daily", '
-                             '"keep-weekly", "keep-monthly", "keep-yearly" '
-                             'or "keep-list" settings must be specified.')
+                             '"keep-weekly", "keep-monthly", "keep-yearly", '
+                             '"keep-list" or "remove-list" settings must be specified.')
             return self.exit_code
         archives = manifest.list_archive_infos(sort_by='ts', reverse=True)  # just a ArchiveInfo list
         if args.prefix:
@@ -702,6 +703,11 @@ class Archiver:
                 self.print_error('You specified non-existing archive name(s): ' + ', '.join(args.keep_list))
                 return self.exit_code
             keep += prune_keep(archives, args.keep_list, keep)
+        if args.remove_list:
+            if not set(args.remove_list).issubset([archive.name for archive in archives]):
+                self.print_error('You specified non-existing archive name(s): ' + ', '.join(args.remove_list))
+                return self.exit_code
+            keep += prune_remove(archives, args.remove_list)
 
         keep.sort(key=attrgetter('ts'), reverse=True)
         to_delete = [a for a in archives if a not in keep]
@@ -1664,6 +1670,8 @@ class Archiver:
                                help='number of yearly archives to keep')
         subparser.add_argument('-k', '--keep-list', nargs='+', dest='keep_list', type=str,
                                help='list of archives to keep')
+        subparser.add_argument('-r', '--remove-list', nargs='+', dest='remove_list', type=str,
+                               help='list of archives to prune')
         subparser.add_argument('-P', '--prefix', dest='prefix', type=PrefixSpec,
                                help='only consider archive names starting with this prefix')
         subparser.add_argument('--save-space', dest='save_space', action='store_true',

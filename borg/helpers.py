@@ -209,6 +209,14 @@ def prune_keep(archives, keep_list, skip=[]):
     return keep
 
 
+def prune_remove(archives, remove_list):
+    remove = []
+    for a in archives:
+        if a.name not in remove_list:
+            remove.append(a)
+    return remove
+
+
 class Statistics:
 
     def __init__(self):
